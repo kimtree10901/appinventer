@@ -13,39 +13,54 @@
             border-width: 2px;
             border-color: #888;
         }
+
+        /* YouTube iframe을 숨길 수 있는 스타일 */
+        #musicFrame {
+            display: none; /* 음악만 재생되도록 화면에 표시되지 않도록 설정 */
+        }
     </style>
 </head>
 <body>
-    <!-- Jigsaw Puzzle iframe --> 100%; height: 600px; max-height: 90vh; border-style: solid; border-width: 2px; border-color: #888" 
+    <!-- Jigsaw Puzzle iframe -->
+    <iframe id="puzzleFrame" style="width: 100%; height: 600px; max-height: 90vh; border-style: solid; border-width: 2px; border-color: #888" 
         allowFullScreen="true" 
         src="https://www.jigsawexplorer.com/online-jigsaw-puzzle-player.html?frm=1&url=aHR0cHM6Ly9lbmNyeXB0ZWQtdGJuMC5nc3RhdGljLmNvbS9pbWFnZXM_cT10Ym46QU5kOUdjUTFuOHpSSTljZEVQcnlWazFRY3RiMXNSY3NMOGRDeV9KRzFRJnMuanBn&cred=7KaQ6rKo7KO87IWU7IScIOqwkOyCrO2VqeuLiOuLpC4~&nop=30" 
         title="Jigsaw Puzzle">
     </iframe>
 
-    <!-- Music Audio -->
-    <audio id="backgroundMusic" loop>
-        <source src="https://www.youtube.com/watch?v=jy8eGRwI9h8" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
+    <!-- YouTube Music Video (iframe) -->
+    <iframe id="musicFrame" width="0" height="0" 
+        src="https://www.youtube.com/embed/jy8eGRwI9h8?autoplay=1&loop=1&playlist=YOUR_VIDEO_ID" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+    </iframe>
 
     <!-- Music Control Button -->
     <button onclick="toggleMusic()">Play/Pause Music</button>
 
     <script>
-        // Music control function
+        // YouTube 음악 제어 함수
+        var musicFrame = document.getElementById("musicFrame");
+        var musicPlaying = false; // 음악이 재생 중인지 확인하는 변수
+
         function toggleMusic() {
-            var music = document.getElementById("backgroundMusic");
-            if (music.paused) {
-                music.play();
+            if (musicPlaying) {
+                // 음악 멈추기
+                musicFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                musicPlaying = false;
             } else {
-                music.pause();
+                // 음악 재생
+                musicFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                musicPlaying = true;
             }
         }
 
         // Function to stop the music when the puzzle is finished
         function stopMusic() {
-            var music = document.getElementById("backgroundMusic");
-            music.pause();  // Pause the music
+            // 음악 멈추기
+            musicFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            musicPlaying = false;
         }
 
         // Example: Assume puzzle sends a message when finished
