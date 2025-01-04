@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle with Music Toggle</title>
+    <style>
+        iframe {
+            width: 100%;
+            height: 600px;
+            max-height: 90vh;
+            border-style: solid;
+            border-width: 2px;
+            border-color: #888;
+        }
+    </style>
+</head>
+<body>
+    <!-- Jigsaw Puzzle iframe -->
+    <iframe id="puzzleFrame" style="width: 100%; height: 600px; max-height: 90vh; border-style: solid; border-width: 2px; border-color: #888" 
+        allowFullScreen="true" 
+        src="https://www.jigsawexplorer.com/online-jigsaw-puzzle-player.html?frm=1&url=aHR0cHM6Ly9lbmNyeXB0ZWQtdGJuMC5nc3RhdGljLmNvbS9pbWFnZXM_cT10Ym46QU5kOUdjUTFuOHpSSTljZEVQcnlWazFRY3RiMXNSY3NMOGRDeV9KRzFRJnMuanBn&cred=7KaQ6rKo7KO87IWU7IScIOqwkOyCrO2VqeuLiOuLpC4~&nop=30" 
+        title="Jigsaw Puzzle">
+    </iframe>
+
+    <!-- Music Audio -->
+    <audio id="backgroundMusic" loop>
+        <source src="C:\Users\Open Lap-7\Downloads\265BF74B5854C5091A.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Music Control Button -->
+    <button onclick="toggleMusic()">Play/Pause Music</button>
+
+    <script>
+        // Music control function
+        function toggleMusic() {
+            var music = document.getElementById("backgroundMusic");
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        // Function to stop the music when the puzzle is finished
+        function stopMusic() {
+            var music = document.getElementById("backgroundMusic");
+            music.pause();  // Pause the music
+        }
+
+        // Example: Assume puzzle sends a message when finished
+        var puzzleFrame = document.getElementById('puzzleFrame');
+
+        // Event listener or message listener (assuming the puzzle can communicate)
+        window.addEventListener('message', function(event) {
+            if (event.origin === 'https://www.jigsawexplorer.com') {
+                // Check if the message is indicating the puzzle is complete
+                if (event.data === 'puzzleComplete') {
+                    stopMusic();  // Stop the music when puzzle is complete
+                }
+            }
+        });
+    </script>
+</body>
+</html>
